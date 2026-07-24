@@ -1,0 +1,156 @@
+@import 'tailwindcss';
+
+/*
+ * Clearway design tokens — the "Motorway" system. See docs/08-design-system.md.
+ * Light values live in @theme; dark values are re-declared under .dark so every
+ * Tailwind utility built on a token flips automatically with no dark: variant.
+ */
+
+@theme {
+  /* Colour — light */
+  --color-road: #0f1613;
+  --color-road-2: #1b2621;
+  --color-sign: #00693e;
+  --color-sign-ink: #f4f7f2;
+  --color-reflect: #f3f4ef;
+  --color-surface: #ffffff;
+  --color-surface-2: #f8f9f5;
+  --color-amber: #b46f08;
+  --color-route: #134fa8;
+  --color-stop: #b3261e;
+  --color-line: #d3d7ce;
+  --color-muted: #5c665f;
+
+  /* Fonts (wired to next/font CSS variables) */
+  --font-display: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-public-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, 'SFMono-Regular', monospace;
+
+  /* Radius */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 14px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(15, 22, 19, 0.06), 0 1px 3px rgba(15, 22, 19, 0.08);
+  --shadow-lg: 0 10px 30px -10px rgba(15, 22, 19, 0.25);
+
+  /* Breakpoints (Tailwind defaults, listed for clarity) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+/* Dark theme — plain custom properties override the token values. */
+.dark {
+  --color-road: #eaeee8;
+  --color-road-2: #182320;
+  --color-sign: #22c07a;
+  --color-sign-ink: #07130d;
+  --color-reflect: #0f1613;
+  --color-surface: #141d19;
+  --color-surface-2: #1b2621;
+  --color-amber: #e8a33d;
+  --color-route: #5b9bff;
+  --color-stop: #ff6b5e;
+  --color-line: #2a3833;
+  --color-muted: #8fa096;
+}
+
+/* ── Base ──────────────────────────────────────────────────────────────────── */
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-reflect);
+  color: var(--color-road);
+  font-family: var(--font-sans);
+  font-feature-settings: 'kern';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+}
+
+/* Focus is visible everywhere and never removed (docs §7). */
+:focus-visible {
+  outline: 2px solid var(--color-route);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-sign) 30%, transparent);
+}
+
+/* The signage legend: small, wide-tracked, uppercase Archivo. */
+.legend {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+/* Reduced motion: kill every transition and animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Route strip animation ─────────────────────────────────────────────────── */
+@keyframes lane-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes marker-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-panel-in {
+  animation: panel-in 240ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.animate-marker-in {
+  animation: marker-in 320ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}

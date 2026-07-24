@@ -1,0 +1,47 @@
+{
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": [
+          {
+            "group": ["@/app/*", "@/components/*"],
+            "message": "Domain and infrastructure layers must not import from the presentation layer (src/app, src/components). Dependencies point inward only — see docs/02-architecture.md."
+          }
+        ]
+      }
+    ],
+    "no-restricted-globals": [
+      "error",
+      {
+        "name": "fetch",
+        "message": "Adapters and the domain layer must use the guarded HTTP client (ctx.http), never global fetch. See docs/07-security.md."
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "src/app/**/*",
+        "src/components/**/*",
+        "src/middleware.ts",
+        "src/lib/net/**/*",
+        "tests/**/*"
+      ],
+      "rules": {
+        "no-restricted-globals": "off",
+        "no-restricted-imports": "off"
+      }
+    },
+    {
+      "files": ["**/*.test.ts", "src/server/resolver/testing.ts"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "warn",
+          { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+        ]
+      }
+    }
+  ]
+}

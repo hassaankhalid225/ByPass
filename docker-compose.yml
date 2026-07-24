@@ -1,0 +1,48 @@
+# Production-shaped local run: app + Postgres + Redis.
+# `docker compose up --build` then open http://localhost:3000
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      APP_URL: http://localhost:3000
+      DATABASE_URL: postgres://clearway:clearway@db:5432/clearway
+      REDIS_URL: redis://cache:6379
+      RESOLVE_HASH_SALT: ${RESOLVE_HASH_SALT:-local-compose-salt-change-me-please-32b}
+      TRUSTED_PROXY_COUNT: '0'
+    depends_on:
+      db:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    # Run migrations, then start.
+    command: sh -c "node scripts/migrate.mjs && node server.js"
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: clearway
+      POSTGRES_PASSWORD: clearway
+      POSTGRES_DB: clearway
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U clearway']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  cache:
+    image: redis:7-alpine
+    command: redis-server --save "" --appendonly no
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:

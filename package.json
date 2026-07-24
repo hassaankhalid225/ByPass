@@ -1,0 +1,60 @@
+{
+  "name": "clearway",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Clearway — a link-gate resolver. Paste a wrapped URL, get the destination, see every hop.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.11"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "migrate": "node scripts/migrate.mjs",
+    "admin:hash": "node scripts/admin-hash.mjs",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run typecheck && npm run lint && npm run format:check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "ioredis": "^5.4.1",
+    "jose": "^5.9.6",
+    "lucide-react": "^0.468.0",
+    "next": "^15.5.21",
+    "pg": "^8.13.1",
+    "pino": "^9.5.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "zod": "^3.24.1"
+  },
+  "overrides": {
+    "sharp": "^0.35.0",
+    "postcss": "^8.5.22"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.10.5",
+    "@types/pg": "^8.11.10",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^2.1.8",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^15.5.21",
+    "pino-pretty": "^13.0.0",
+    "prettier": "^3.4.2",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

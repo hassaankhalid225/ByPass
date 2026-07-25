@@ -10,6 +10,9 @@ import { resolveLink } from '@/server/resolve-service'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
+// Allow a full resolve chain to complete on serverless platforms (Vercel etc.).
+// Keep RESOLVE_TIMEOUT_MS below this so the engine aborts before the platform does.
+export const maxDuration = 30
 
 export async function POST(req: NextRequest) {
   const requestId = getRequestId(req)

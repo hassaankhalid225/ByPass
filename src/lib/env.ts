@@ -80,7 +80,13 @@ const EnvSchema = z
     ENABLE_ADMIN_DEV: booleanish.optional(),
   })
   .superRefine((val, ctx) => {
-    if (val.NODE_ENV === 'production') {
+    // Skip production-secret enforcement during `next build`. Static generation
+    // (sitemap, service pages) imports this module at build time, where runtime
+    // secrets are not needed and may be absent. The checks still run at runtime
+    // (serverless function / server start), so a real misconfiguration fails loud
+    // where it matters. See docs/09-deployment-operations.md.
+    const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build'
+    if (val.NODE_ENV === 'production' && !isBuildPhase) {
       if (val.RESOLVE_HASH_SALT.startsWith('dev-only')) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,

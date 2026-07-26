@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import type { ApiEnvelope, ResolveData } from '@/lib/api/types'
 import { clearHistory, pushHistory, readHistory, type HistoryEntry } from '@/lib/history'
 import { DestinationSign } from './DestinationSign'
+import { PreviewCard } from './PreviewCard'
 import { RouteStrip } from './RouteStrip'
 
 type State =
@@ -39,14 +40,7 @@ export function ResolveForm() {
     }
   }
 
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    const trimmed = url.trim()
-    if (!trimmed) {
-      setValidationError('Paste a link first.')
-      inputRef.current?.focus()
-      return
-    }
+  async function doResolve(trimmed: string) {
     setValidationError(null)
     setState({ phase: 'loading' })
 
@@ -84,6 +78,27 @@ export function ResolveForm() {
         requestId: '—',
       })
     }
+  }
+
+  // Shareable / bookmarklet links: /?u=<encoded-url> pre-fills and auto-resolves.
+  useEffect(() => {
+    const u = new URLSearchParams(window.location.search).get('u')
+    if (u) {
+      setUrl(u)
+      void doResolve(u.trim())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  function onSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    const trimmed = url.trim()
+    if (!trimmed) {
+      setValidationError('Paste a link first.')
+      inputRef.current?.focus()
+      return
+    }
+    void doResolve(trimmed)
   }
 
   function reuse(entry: HistoryEntry) {
@@ -143,6 +158,9 @@ export function ResolveForm() {
         {state.phase === 'done' && (
           <div className="space-y-5">
             <DestinationSign data={state.data} />
+            {(state.data.status === 'resolved' || state.data.status === 'already-direct') && (
+              <PreviewCard destination={state.data.destination} />
+            )}
             {state.data.chain.length > 1 && (
               <section
                 aria-label="Route"

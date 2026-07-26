@@ -31,6 +31,18 @@ export interface ResolveData {
   warnings: string[]
 }
 
+export interface PreviewData {
+  url: string
+  finalHost: string
+  isHttps: boolean
+  contentType: string | null
+  title: string | null
+  description: string | null
+  siteName: string | null
+  qr: string
+  fetchedAt: string
+}
+
 export interface ApiError {
   code: string
   message: string

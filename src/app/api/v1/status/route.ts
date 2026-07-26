@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server'
 import { errors } from '@/lib/errors'
 import { getClientIp, getRequestId } from '@/lib/api/request'
-import { failUnknown, ok } from '@/lib/api/response'
+import { failUnknown, ok, preflight } from '@/lib/api/response'
 import { rateLimit } from '@/server/ratelimit'
 import { getStatus } from '@/server/status-service'
 
@@ -24,4 +24,8 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     return failUnknown(err, meta)
   }
+}
+
+export function OPTIONS() {
+  return preflight()
 }

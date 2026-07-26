@@ -3,13 +3,20 @@ import { registry } from '@/server/resolver'
 import { SITE } from '@/lib/site'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticRoutes = ['', '/supported', '/status', '/faq', '/about', '/privacy', '/terms'].map(
-    (path) => ({
-      url: `${SITE.url}${path}`,
-      changeFrequency: 'weekly' as const,
-      priority: path === '' ? 1 : 0.7,
-    }),
-  )
+  const staticRoutes = [
+    '',
+    '/supported',
+    '/status',
+    '/developers',
+    '/faq',
+    '/about',
+    '/privacy',
+    '/terms',
+  ].map((path) => ({
+    url: `${SITE.url}${path}`,
+    changeFrequency: 'weekly' as const,
+    priority: path === '' ? 1 : 0.7,
+  }))
 
   const serviceRoutes = registry
     .listed()

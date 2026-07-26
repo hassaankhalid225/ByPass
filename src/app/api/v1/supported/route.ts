@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server'
 import { env } from '@/lib/env'
 import { errors } from '@/lib/errors'
 import { getClientIp, getRequestId } from '@/lib/api/request'
-import { failUnknown, ok } from '@/lib/api/response'
+import { failUnknown, ok, preflight } from '@/lib/api/response'
 import { SupportedQuerySchema } from '@/lib/api/schemas'
 import { getSupported } from '@/server/catalog-service'
 import type { ServiceCategory } from '@/server/resolver'
@@ -39,4 +39,8 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     return failUnknown(err, meta)
   }
+}
+
+export function OPTIONS() {
+  return preflight()
 }

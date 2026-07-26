@@ -15,16 +15,33 @@ export interface ApiHeaders {
   extra?: Record<string, string>
 }
 
+/** CORS for the public API: the resolver is a public, rate-limited utility, so it
+ *  is safe to call cross-origin (bookmarklets, third-party integrations). */
+function applyCors(headers: Headers): void {
+  headers.set('Access-Control-Allow-Origin', '*')
+  headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+  headers.set('Access-Control-Allow-Headers', 'content-type, x-request-id')
+  headers.set('Access-Control-Max-Age', '86400')
+}
+
 function baseHeaders({ requestId, rateLimit, extra }: ApiHeaders): Headers {
   const headers = new Headers(extra)
   headers.set('X-Request-Id', requestId)
   headers.set('Cache-Control', headers.get('Cache-Control') ?? 'no-store')
+  applyCors(headers)
   if (rateLimit) {
     headers.set('X-RateLimit-Limit', String(rateLimit.limit))
     headers.set('X-RateLimit-Remaining', String(rateLimit.remaining))
     headers.set('X-RateLimit-Reset', String(rateLimit.resetAt))
   }
   return headers
+}
+
+/** Shared OPTIONS preflight response for API routes. */
+export function preflight(): NextResponse {
+  const headers = new Headers()
+  applyCors(headers)
+  return new NextResponse(null, { status: 204, headers })
 }
 
 export function ok<T>(data: T, meta: ApiHeaders, status = 200): NextResponse {

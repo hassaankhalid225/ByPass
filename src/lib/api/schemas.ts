@@ -20,6 +20,10 @@ export const SupportedQuerySchema = z.object({
   q: z.string().max(64).optional(),
 })
 
+export const PreviewRequestSchema = z.object({
+  url: z.string().min(1).max(2048),
+})
+
 export const AdminLoginSchema = z.object({
   password: z.string().min(1).max(256),
 })

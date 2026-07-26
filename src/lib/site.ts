@@ -12,14 +12,15 @@ export const NAV = [
   { href: '/', label: 'Resolve' },
   { href: '/supported', label: 'Supported' },
   { href: '/status', label: 'Status' },
+  { href: '/developers', label: 'Developers' },
   { href: '/faq', label: 'FAQ' },
-  { href: '/about', label: 'About' },
 ] as const
 
 export const FOOTER_LINKS = [
   { href: '/about', label: 'About' },
   { href: '/supported', label: 'Supported sites' },
   { href: '/status', label: 'Status' },
+  { href: '/developers', label: 'Developers' },
   { href: '/faq', label: 'FAQ' },
   { href: '/privacy', label: 'Privacy' },
   { href: '/terms', label: 'Terms' },

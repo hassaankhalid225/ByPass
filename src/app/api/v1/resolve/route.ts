@@ -2,7 +2,7 @@ import type { NextRequest } from 'next/server'
 import { env } from '@/lib/env'
 import { AppError, errors } from '@/lib/errors'
 import { getClientIp, getRequestId, parseJsonBody } from '@/lib/api/request'
-import { failUnknown, ok } from '@/lib/api/response'
+import { failUnknown, ok, preflight } from '@/lib/api/response'
 import { ResolveRequestSchema } from '@/lib/api/schemas'
 import { metrics } from '@/server/metrics'
 import { rateLimit } from '@/server/ratelimit'
@@ -69,4 +69,8 @@ export async function GET() {
   return failUnknown(new AppError('METHOD_NOT_ALLOWED', 'Use POST to resolve a link.'), {
     requestId: 'r_method',
   })
+}
+
+export function OPTIONS() {
+  return preflight()
 }

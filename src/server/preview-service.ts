@@ -5,6 +5,7 @@ import { httpClient } from '../lib/net/http'
 import { qrDataUri } from '../lib/qr'
 import { extractMetadata } from '../lib/url/metadata'
 import { normalizeUrl } from '../lib/url/normalize'
+import { computeSafetyFlags } from '../lib/url/safety'
 import { getCache } from './cache'
 
 /**
@@ -27,6 +28,8 @@ export interface PreviewResult {
   siteName: string | null
   /** QR code of the URL as an inline SVG data URI. */
   qr: string
+  /** Advisory safety signals about the destination (not a verdict). */
+  flags: string[]
   fetchedAt: string
 }
 
@@ -54,6 +57,7 @@ export async function getPreview(rawUrl: string, requestId: string): Promise<Pre
     description: null,
     siteName: null,
     qr: qrDataUri(normalized.href),
+    flags: computeSafetyFlags(normalized.url),
     fetchedAt: new Date().toISOString(),
   }
 

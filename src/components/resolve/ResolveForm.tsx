@@ -1,8 +1,9 @@
 'use client'
 
-import { AlertTriangle, ClipboardPaste, Trash2 } from 'lucide-react'
+import { AlertTriangle, ClipboardPaste, Download, Trash2 } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Button } from '@/components/ui/Button'
+import { CopyButton } from '@/components/ui/CopyButton'
 import type { ApiEnvelope, ResolveData } from '@/lib/api/types'
 import { clearHistory, pushHistory, readHistory, type HistoryEntry } from '@/lib/history'
 import { DestinationSign } from './DestinationSign'
@@ -111,6 +112,20 @@ export function ResolveForm() {
     setHistory([])
   }
 
+  function exportHistory() {
+    const blob = new Blob([JSON.stringify(history, null, 2)], { type: 'application/json' })
+    const a = document.createElement('a')
+    a.href = URL.createObjectURL(blob)
+    a.download = 'clearway-history.json'
+    a.click()
+    URL.revokeObjectURL(a.href)
+  }
+
+  const shareUrl =
+    typeof window !== 'undefined' && state.phase === 'done'
+      ? `${window.location.origin}/?u=${encodeURIComponent(state.data.source)}`
+      : ''
+
   return (
     <div className="w-full">
       <form onSubmit={onSubmit} noValidate>
@@ -170,9 +185,12 @@ export function ResolveForm() {
                 <RouteStrip chain={state.data.chain} />
               </section>
             )}
-            <p className="text-xs text-[--color-muted]">
-              Request <span className="font-mono">{state.requestId}</span>
-            </p>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <CopyButton value={shareUrl} label="Copy share link" />
+              <p className="text-xs text-[--color-muted]">
+                Request <span className="font-mono">{state.requestId}</span>
+              </p>
+            </div>
           </div>
         )}
       </div>
@@ -199,14 +217,24 @@ export function ResolveForm() {
         <section aria-label="Recent" className="mt-10">
           <div className="mb-3 flex items-center justify-between">
             <p className="legend">Recent on this device</p>
-            <button
-              type="button"
-              onClick={onClearHistory}
-              className="inline-flex items-center gap-1.5 text-xs text-[--color-muted] transition-colors duration-120 hover:text-[--color-stop]"
-            >
-              <Trash2 className="size-3.5" aria-hidden="true" />
-              Clear
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={exportHistory}
+                className="inline-flex items-center gap-1.5 text-xs text-[--color-muted] transition-colors duration-120 hover:text-[--color-road]"
+              >
+                <Download className="size-3.5" aria-hidden="true" />
+                Export
+              </button>
+              <button
+                type="button"
+                onClick={onClearHistory}
+                className="inline-flex items-center gap-1.5 text-xs text-[--color-muted] transition-colors duration-120 hover:text-[--color-stop]"
+              >
+                <Trash2 className="size-3.5" aria-hidden="true" />
+                Clear
+              </button>
+            </div>
           </div>
           <ul className="divide-y divide-[--color-line] rounded-[--radius-lg] border border-[--color-line] bg-[--color-surface]">
             {history.map((entry) => (

@@ -1,6 +1,6 @@
 'use client'
 
-import { Download, FileText, Lock, QrCode, ShieldCheck, Unlock } from 'lucide-react'
+import { AlertTriangle, Download, FileText, Lock, QrCode, ShieldCheck, Unlock } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { CopyButton } from '@/components/ui/CopyButton'
 import type { ApiEnvelope, PreviewData } from '@/lib/api/types'
@@ -88,6 +88,17 @@ export function PreviewCard({ destination }: { destination: string }) {
               </span>
             )}
           </p>
+
+          {data.flags.length > 0 && (
+            <ul className="mt-3 space-y-1">
+              {data.flags.map((f) => (
+                <li key={f} className="flex items-start gap-1.5 text-xs text-[--color-amber]">
+                  <AlertTriangle className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
+                  <span>{f}</span>
+                </li>
+              ))}
+            </ul>
+          )}
 
           <div className="mt-4 flex flex-wrap gap-2">
             <CopyButton value={markdown} label="Copy as Markdown" />

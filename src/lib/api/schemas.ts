@@ -24,6 +24,10 @@ export const PreviewRequestSchema = z.object({
   url: z.string().min(1).max(2048),
 })
 
+export const BatchRequestSchema = z.object({
+  urls: z.array(z.string().min(1).max(2048)).min(1).max(10),
+})
+
 export const AdminLoginSchema = z.object({
   password: z.string().min(1).max(256),
 })

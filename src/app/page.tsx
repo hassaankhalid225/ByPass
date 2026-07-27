@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { ArrowRight, Eye, Route, ShieldCheck } from 'lucide-react'
-import { ResolveForm } from '@/components/resolve/ResolveForm'
+import { Resolver } from '@/components/resolve/Resolver'
 import { LiveStats } from '@/components/LiveStats'
 import { registry } from '@/server/resolver'
 
@@ -28,7 +28,7 @@ export default function HomePage() {
         </div>
 
         <div className="mx-auto mt-10 max-w-2xl">
-          <ResolveForm />
+          <Resolver />
           <LiveStats />
         </div>
       </section>

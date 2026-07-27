@@ -40,7 +40,24 @@ export interface PreviewData {
   description: string | null
   siteName: string | null
   qr: string
+  flags: string[]
   fetchedAt: string
+}
+
+export type BatchItemResult =
+  | {
+      input: string
+      ok: true
+      status: 'resolved' | 'already-direct' | 'partial'
+      destination: string
+      hops: number
+      service: { id: string; name: string; category: string } | null
+    }
+  | { input: string; ok: false; code: string; message: string }
+
+export interface BatchData {
+  count: number
+  results: BatchItemResult[]
 }
 
 export interface ApiError {
